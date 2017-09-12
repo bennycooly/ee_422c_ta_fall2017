@@ -55,5 +55,9 @@ junitPlatform {
     // filters (optional)
 }
 
+run{
+    standardInput = System.in
+}
+
 mainClassName = 'Recitation2'
 
