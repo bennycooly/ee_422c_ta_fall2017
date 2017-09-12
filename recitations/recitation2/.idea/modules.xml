@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/recitation2.iml" filepath="$PROJECT_DIR$/recitation2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/recitation2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/recitation2_main.iml" group="recitation2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/recitation2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/recitation2_test.iml" group="recitation2" />
     </modules>
   </component>
 </project>
