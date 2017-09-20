@@ -1,6 +1,7 @@
 
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -11,6 +12,7 @@ public class Recitation2 {
 
         Recitation2 program = new Recitation2();
 
+        // read from stdin
         try
         (
             InputStreamReader reader = new InputStreamReader(System.in);
@@ -20,6 +22,23 @@ public class Recitation2 {
             Integer num = Integer.parseInt(bufferedReader.readLine());
             System.out.println("the sum of the digits in " + num + " is " + program.sumOfDigits(num));
 
+        }
+
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        // read from file
+        try
+        (
+            FileReader fr = new FileReader("file.txt");
+            BufferedReader br = new BufferedReader(fr)
+        )
+        {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println("line says " + line);
+            }
         }
 
         catch(IOException e) {
