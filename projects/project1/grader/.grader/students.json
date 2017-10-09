@@ -1,0 +1,372 @@
+[
+    {
+        "sis_user_id": "jaf4695",
+        "short_name": "Julien Ferry",
+        "id": 4206892,
+        "sortable_name": "Ferry, Julien",
+        "integration_id": null,
+        "login_id": "jaf4695",
+        "sis_login_id": "jaf4695",
+        "name": "Julien Ferry"
+    },
+    {
+        "sis_user_id": "ml42797",
+        "short_name": "Michael Lawrence",
+        "id": 4100590,
+        "sortable_name": "Lawrence, Michael",
+        "integration_id": null,
+        "login_id": "ml42797",
+        "sis_login_id": "ml42797",
+        "name": "Michael Lawrence"
+    },
+    {
+        "sis_user_id": "ccm3225",
+        "short_name": "Crystal McDuffie",
+        "id": 4096543,
+        "sortable_name": "McDuffie, Crystal",
+        "integration_id": null,
+        "login_id": "ccm3225",
+        "sis_login_id": "ccm3225",
+        "name": "Crystal McDuffie"
+    },
+    {
+        "sis_user_id": "av28677",
+        "short_name": "Andrew Vu",
+        "id": 4083982,
+        "sortable_name": "Vu, Andrew",
+        "integration_id": null,
+        "login_id": "av28677",
+        "sis_login_id": "av28677",
+        "name": "Andrew Vu"
+    },
+    {
+        "sis_user_id": "cww835",
+        "short_name": "Cynthia Wu",
+        "id": 4084378,
+        "sortable_name": "Wu, Cynthia",
+        "integration_id": null,
+        "login_id": "cww835",
+        "sis_login_id": "cww835",
+        "name": "Cynthia Wu"
+    },
+    {
+        "sis_user_id": "pks629",
+        "short_name": "Pratyush Singh",
+        "id": 4086109,
+        "sortable_name": "Singh, Pratyush",
+        "integration_id": null,
+        "login_id": "pks629",
+        "sis_login_id": "pks629",
+        "name": "Pratyush Singh"
+    },
+    {
+        "sis_user_id": "bjc2975",
+        "short_name": "Brian Coombs",
+        "id": 4134175,
+        "sortable_name": "Coombs, Brian",
+        "integration_id": null,
+        "login_id": "bjc2975",
+        "sis_login_id": "bjc2975",
+        "name": "Brian Coombs"
+    },
+    {
+        "sis_user_id": "kyc375",
+        "short_name": "Kravis Cho",
+        "id": 4020676,
+        "sortable_name": "Cho, Kravis",
+        "integration_id": null,
+        "login_id": "kyc375",
+        "sis_login_id": "kyc375",
+        "name": "Kravis Cho"
+    },
+    {
+        "sis_user_id": "sr42946",
+        "short_name": "S M Farhanur Rahman",
+        "id": 4102501,
+        "sortable_name": "Rahman, S M Farhanur",
+        "integration_id": null,
+        "login_id": "sr42946",
+        "sis_login_id": "sr42946",
+        "name": "S M Farhanur Rahman"
+    },
+    {
+        "sis_user_id": "eoo336",
+        "short_name": "Ejeh Okorafor",
+        "id": 4084600,
+        "sortable_name": "Okorafor, Ejeh",
+        "integration_id": null,
+        "login_id": "eoo336",
+        "sis_login_id": "eoo336",
+        "name": "Ejeh Okorafor"
+    },
+    {
+        "sis_user_id": "bzg74",
+        "short_name": "Benjamin Guo",
+        "id": 4032594,
+        "sortable_name": "Guo, Benjamin",
+        "integration_id": null,
+        "login_id": "bzg74",
+        "sis_login_id": "bzg74",
+        "name": "Benjamin Guo"
+    },
+    {
+        "sis_user_id": "mag7772",
+        "short_name": "Mark Goode",
+        "id": 4100178,
+        "sortable_name": "Goode, Mark",
+        "integration_id": null,
+        "login_id": "mag7772",
+        "sis_login_id": "mag7772",
+        "name": "Mark Goode"
+    },
+    {
+        "sis_user_id": "adb2969",
+        "short_name": "Alexander Bi",
+        "id": 4026225,
+        "sortable_name": "Bi, Alexander",
+        "integration_id": null,
+        "login_id": "adb2969",
+        "sis_login_id": "adb2969",
+        "name": "Alexander Bi"
+    },
+    {
+        "sis_user_id": "mh43862",
+        "short_name": "Melissa Hall",
+        "id": 4019113,
+        "sortable_name": "Hall, Melissa",
+        "integration_id": null,
+        "login_id": "mh43862",
+        "sis_login_id": "mh43862",
+        "name": "Melissa Hall"
+    },
+    {
+        "sis_user_id": "at35236",
+        "short_name": "Anjali Tewani",
+        "id": 4095983,
+        "sortable_name": "Tewani, Anjali",
+        "integration_id": null,
+        "login_id": "at35236",
+        "sis_login_id": "at35236",
+        "name": "Anjali Tewani"
+    },
+    {
+        "sis_user_id": "wpp228",
+        "short_name": "Withanage Perera",
+        "id": 4086810,
+        "sortable_name": "Perera, Withanage",
+        "integration_id": null,
+        "login_id": "wpp228",
+        "sis_login_id": "wpp228",
+        "name": "Withanage Perera"
+    },
+    {
+        "sis_user_id": "sp39447",
+        "short_name": "Saras Paudel",
+        "id": 4102475,
+        "sortable_name": "Paudel, Saras",
+        "integration_id": null,
+        "login_id": "sp39447",
+        "sis_login_id": "sp39447",
+        "name": "Saras Paudel"
+    },
+    {
+        "sis_user_id": "mjr3535",
+        "short_name": "Marek Rajtar",
+        "id": 4100544,
+        "sortable_name": "Rajtar, Marek",
+        "integration_id": null,
+        "login_id": "mjr3535",
+        "sis_login_id": "mjr3535",
+        "name": "Marek Rajtar"
+    },
+    {
+        "sis_user_id": "jgd765",
+        "short_name": "Justin Dupont",
+        "id": 4098706,
+        "sortable_name": "Dupont, Justin",
+        "integration_id": null,
+        "login_id": "jgd765",
+        "sis_login_id": "jgd765",
+        "name": "Justin Dupont"
+    },
+    {
+        "sis_user_id": "bb35886",
+        "short_name": "Brandon Bui",
+        "id": 4084028,
+        "sortable_name": "Bui, Brandon",
+        "integration_id": null,
+        "login_id": "bb35886",
+        "sis_login_id": "bb35886",
+        "name": "Brandon Bui"
+    },
+    {
+        "sis_user_id": "prm847",
+        "short_name": "Pooja Muddasani",
+        "id": 4086135,
+        "sortable_name": "Muddasani, Pooja",
+        "integration_id": null,
+        "login_id": "prm847",
+        "sis_login_id": "prm847",
+        "name": "Pooja Muddasani"
+    },
+    {
+        "sis_user_id": "jrm4496",
+        "short_name": "Jonathan Mounsif",
+        "id": 3541546,
+        "sortable_name": "Mounsif, Jonathan",
+        "integration_id": null,
+        "login_id": "jrm4496",
+        "sis_login_id": "jrm4496",
+        "name": "Jonathan Mounsif"
+    },
+    {
+        "sis_user_id": "ejs2779",
+        "short_name": "Erick Shepherd",
+        "id": 4057939,
+        "sortable_name": "Shepherd, Erick",
+        "integration_id": null,
+        "login_id": "ejs2779",
+        "sis_login_id": "ejs2779",
+        "name": "Erick Shepherd"
+    },
+    {
+        "sis_user_id": "zca75",
+        "short_name": "Zachary Arredondo",
+        "id": 3849457,
+        "sortable_name": "Arredondo, Zachary",
+        "integration_id": null,
+        "login_id": "zca75",
+        "sis_login_id": "zca75",
+        "name": "Zachary Arredondo"
+    },
+    {
+        "sis_user_id": "hng298",
+        "short_name": "Hasan Genc",
+        "id": 4069416,
+        "sortable_name": "Genc, Hasan",
+        "integration_id": null,
+        "login_id": "hng298",
+        "sis_login_id": "hng298",
+        "name": "Hasan Genc"
+    },
+    {
+        "sis_user_id": "sh42678",
+        "short_name": "SUNGUK HONG",
+        "id": 4015264,
+        "sortable_name": "Hong, Sunguk",
+        "integration_id": null,
+        "login_id": "sh42678",
+        "sis_login_id": "sh42678",
+        "name": "Sunguk Hong"
+    },
+    {
+        "sis_user_id": "kml2959",
+        "short_name": "Kris Lawton",
+        "id": 4026778,
+        "sortable_name": "Lawton, Kristen",
+        "integration_id": null,
+        "login_id": "kml2959",
+        "sis_login_id": "kml2959",
+        "name": "Kristen Lawton"
+    },
+    {
+        "sis_user_id": "sg38368",
+        "short_name": "Sarthak Gupta",
+        "id": 4082559,
+        "sortable_name": "Gupta, Sarthak",
+        "integration_id": null,
+        "login_id": "sg38368",
+        "sis_login_id": "sg38368",
+        "name": "Sarthak Gupta"
+    },
+    {
+        "sis_user_id": "ym5582",
+        "short_name": "Yitao Mao",
+        "id": 4031192,
+        "sortable_name": "Mao, Yitao",
+        "integration_id": null,
+        "login_id": "ym5582",
+        "sis_login_id": "ym5582",
+        "name": "Yitao Mao"
+    },
+    {
+        "sis_user_id": "ss73959",
+        "short_name": "Snigdha Sinha",
+        "id": 4086549,
+        "sortable_name": "Sinha, Snigdha",
+        "integration_id": null,
+        "login_id": "ss73959",
+        "sis_login_id": "ss73959",
+        "name": "Snigdha Sinha"
+    },
+    {
+        "sis_user_id": "acm3554",
+        "short_name": "Aidan McGraw",
+        "id": 3752021,
+        "sortable_name": "McGraw, Aidan",
+        "integration_id": null,
+        "login_id": "acm3554",
+        "sis_login_id": "acm3554",
+        "name": "Aidan McGraw"
+    },
+    {
+        "sis_user_id": "nas2754",
+        "short_name": "Neil Sardesai",
+        "id": 4026964,
+        "sortable_name": "Sardesai, Neil",
+        "integration_id": null,
+        "login_id": "nas2754",
+        "sis_login_id": "nas2754",
+        "name": "Neil Sardesai"
+    },
+    {
+        "sis_user_id": "rs48368",
+        "short_name": "Rahul",
+        "id": 4101857,
+        "sortable_name": "Sharma, Rahul",
+        "integration_id": null,
+        "login_id": "rs48368",
+        "sis_login_id": "rs48368",
+        "name": "Rahul Sharma"
+    },
+    {
+        "sis_user_id": "sjb3448",
+        "short_name": "Sierra Biggs",
+        "id": 4102248,
+        "sortable_name": "Biggs, Sierra",
+        "integration_id": null,
+        "login_id": "sjb3448",
+        "sis_login_id": "sjb3448",
+        "name": "Sierra Biggs"
+    },
+    {
+        "sis_user_id": "coh328",
+        "short_name": "Corey Hulse",
+        "id": 4162166,
+        "sortable_name": "Hulse, Corey",
+        "integration_id": null,
+        "login_id": "coh328",
+        "sis_login_id": "coh328",
+        "name": "Corey Hulse"
+    },
+    {
+        "sis_user_id": "gd7448",
+        "short_name": "George Doykan",
+        "id": 4097906,
+        "sortable_name": "Doykan, George",
+        "integration_id": null,
+        "login_id": "gd7448",
+        "sis_login_id": "gd7448",
+        "name": "George Doykan"
+    },
+    {
+        "sis_user_id": "pak654",
+        "short_name": "Peter Kuo",
+        "id": 4030962,
+        "sortable_name": "Kuo, Peter",
+        "integration_id": null,
+        "login_id": "pak654",
+        "sis_login_id": "pak654",
+        "name": "Peter Kuo"
+    }
+]
