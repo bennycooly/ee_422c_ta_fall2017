@@ -10,7 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="recitation2_main" />
-    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.8.0-alpha2" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-console:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-api:5.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.platform:junit-platform-launcher:1.0.0" level="project" />
