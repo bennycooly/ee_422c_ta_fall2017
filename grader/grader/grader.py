@@ -177,7 +177,7 @@ class Grader:
                             print("Warning: could not find student " + eid)
                             continue
 
-                        student = r.json()
+                        student = r.json()[0]
                         students.append(student)
 
                 # add students for specified sections
@@ -326,46 +326,88 @@ class Grader:
     Compile the source files for every student as well as the solution.
     """
     def compile_sources(self):
-        source_files = self.config["source"]["files"]
+        source = self.config["source"]
+        # for source in sources:
+        source_files = source["files"]
         for student in self.student_map.values():
             print("Looking at student " + student["sis_user_id"])
+            compile_result_file = os.path.join(self.dirs["students"], student["sis_user_id"], "results", "compile.txt")
             student_files = []
             source_path = os.path.join(self.dirs["students"], student["sis_user_id"], "submission")
 
-            for file in source_files:
-                matched_files = glob.glob(os.path.join(source_path, "**", file), recursive=True)
+            if type(source_files) is str and source_files == "*":
+                matched_files = glob.glob(os.path.join(source_path, "**", "*.java"), recursive=True)
                 student_files.extend(matched_files)
 
-            for file in student_files:
-                print("Found file: " + file)
-                completed = subprocess.run(["javac", file])
-                if completed.returncode == 0:
-                    print("Compiled successfully: " + file)
-                else:
-                    print("Failed to compile: " + file)
+            if type(source_files) is list:
+                for file in source_files:
+                    matched_files = glob.glob(os.path.join(source_path, "**", file), recursive=True)
+                    student_files.extend(matched_files)
+
+            # compile student files
+            # for file in student_files:
+            print("Found files: " + str(["javac"] + student_files))
+            completed = subprocess.run(["javac"] + student_files)
+            if completed.returncode == 0:
+                print("Compiled successfully.")
+            else:
+                print("Failed to compile.")
         
         print("Compiling solution files...")
         solution_files = []
         for file in source_files:
             matched_files = glob.glob(os.path.join(self.dirs["solution"], "**", file))
             solution_files.extend(matched_files)
+        
 
         for file in solution_files:
             completed = subprocess.run(["javac", file])
             if completed.returncode == 0:
-                print("Compiled successfully: " + file)
+                print("Compiled successfully.: " + file)
             else:
                 print("Failed to compile: " + file)
 
     
-    def run_program(self):
-        main_class = self.config["source"]["main"]
+    def run_tests(self):
         tests_dir = self.config["tests"]["dir"]            
-        test_configs = self.config["tests"]["tests"]
+        # test_configs = self.config["tests"]["tests"]
+
+        for student in self.student_map.values():
+            print("Running tests for student: " + student["sis_user_id"])
+
+            student_dir = os.path.join(self.dirs["students"], student["sis_user_id"])
+            source_dir = os.path.join(student_dir, "submission")
+            results_dir = os.path.join(student_dir, "results")
+
+            # first clean the student directory
+            if os.path.exists(results_dir):
+                shutil.rmtree(results_dir)
+            os.makedirs(results_dir)
+            # create summary file
+            open(os.path.join(student_dir, "results", "summary.txt"), "w+")
+        
+            for test_dirname in os.listdir(self.dirs["tests"]):
+                test_dir = os.path.join(self.dirs["tests"], test_dirname)
+                print(test_dir)
+                main_class = self.config["source"]["main"]
+                classpath = self.get_classpath(student_dir, main_class)
+                test = Test(
+                    test_config = "",
+                    source_config = {
+                        "student-dir": student_dir,
+                        "main": main_class,
+                        "classpath": classpath
+                    },
+                    tests_dir = self.dirs["tests"]
+                )
+
+        return
 
         # first run the solution
         solution_dir = self.dirs["solution"]
+
         for test_config in test_configs:
+            main_class = test_config["main"]
             classpath = self.get_classpath(self.dirs["solution"], main_class)
             test = Test(
                 test_config = test_config,
@@ -374,7 +416,8 @@ class Grader:
                     "main": main_class,
                     "classpath": classpath
                 },
-                tests_dir = self.dirs["tests"]
+                tests_dir = self.dirs["tests"],
+                solution_dir = self.dirs["solution"]
             )
 
             test.run()
@@ -384,14 +427,19 @@ class Grader:
 
             student_dir = os.path.join(self.dirs["students"], student["sis_user_id"])
             source_dir = os.path.join(student_dir, "submission")
-            classpath_matches = glob.glob(os.path.join(source_dir, "**", main_class.split('.')[0]), recursive=True)
-            if len(classpath_matches) == 0:
-                print("Unable to find classpath in directory. Skipping...")
-                continue
-            classpath = os.path.join(classpath_matches[0], "..")
+
+            # first clean the student directory
+            results_dir = os.path.join(student_dir, "results")
+            if os.path.exists(results_dir):
+                shutil.rmtree(results_dir)
+            os.makedirs(results_dir)
+            # create summary file
+            open(os.path.join(student_dir, "results", "summary.txt"), "w+")
 
             # run all tests
             for test_config in test_configs:
+                main_class = test_config["main"]
+                classpath = self.get_classpath(source_dir, main_class)
                 # change the path to the test to be relative to the cwd
                 # test_config["dir"] = os.path.join(self.dirs["tests"], test_config["dir"])
                 test = Test(
@@ -401,11 +449,37 @@ class Grader:
                         "main": main_class,
                         "classpath": classpath
                     },
-                    tests_dir = self.dirs["tests"]
+                    tests_dir = self.dirs["tests"],
+                    solution_dir = self.dirs["solution"]
                 )
 
                 test.run()
-            
+                test.compare()
+                test.grade()
+    
+    def zip_results(self):
+        for student in self.student_map.values():
+            results_dir = os.path.join(self.dirs["students"], student["sis_user_id"], "results")
+
+            zip_filename = os.path.join(results_dir, "results.zip")
+            if os.path.exists(zip_filename):
+                os.remove(zip_filename)
+        
+            print("Zip file is " + zip_filename)
+
+            with zipfile.ZipFile(zip_filename, "w") as z:
+                for file in glob.glob(os.path.join(results_dir, "**\*"), recursive=True):
+                    # don't write ourselves
+                    if str(file) == zip_filename:
+                        continue
+
+                    # write files relative to the results directory path
+                    z.write(file, arcname=os.path.relpath(file, results_dir))
+                
+
+    def attach_results(self):
+        for student in self.student_map.values():
+            student["id"]
 
 
     """
@@ -452,9 +526,17 @@ class Grader:
     
 
     def get_classpath(self, dir, main_class):
-        # search for the highest-level package directory
-        classpath_matches = glob.glob(os.path.join(dir, "**", main_class.split('.')[0]), recursive=True)
-        classpath = os.path.join(classpath_matches[0], "..")
+        classpath = ""
+        if '.' in main_class:
+            # search for the highest-level package directory
+            classpath_matches = glob.glob(os.path.join(dir, "**", main_class.split('.')[0]), recursive=True)
+            classpath = os.path.join(classpath_matches[0], "..")
+        else:
+            # search for the main java file
+            # print(os.path.join(dir, "**", main_class))
+            classpath_matches = glob.glob(os.path.join(dir, "**", main_class + ".java"), recursive=True)
+            classpath = os.path.join(classpath_matches[0], "..")
+
         return classpath
 
 
@@ -465,10 +547,11 @@ class Grader:
     """
     def start(self):
         self.init()
-        self.download_submissions()
+        # self.download_submissions()
         # self.unzip_submissions()
         # self.compile_sources()
-        self.run_program()
+        self.run_tests()
+        # self.zip_results()
 
     
     def clean(self):

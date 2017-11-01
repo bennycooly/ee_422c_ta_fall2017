@@ -1,0 +1,28 @@
+Welcome to Mastermind.
+Do you want to play a new game? (Y/N):
+
+You have 2 guess(es) left.
+Enter guess:
+OROO -> 0b_0w
+
+You have 1 guess(es) left.
+Enter guess:
+OOOO -> 0b_0w
+You lose! The pattern was GBPY
+
+Do you want to play a new game? (Y/N):
+
+You have 2 guess(es) left.
+Enter guess:
+INVALID_GUESS
+
+You have 2 guess(es) left.
+Enter guess:
+OOOO -> 0b_0w
+
+You have 1 guess(es) left.
+Enter guess:
+GBPY -> 4b_0w
+You win!
+
+Do you want to play a new game? (Y/N):

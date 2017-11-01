@@ -1,0 +1,9 @@
+Welcome to Mastermind.
+Do you want to play a new game? (Y/N):
+
+You have 1 guess(es) left.
+Enter guess:
+OBPY -> 4b_0w
+You win!
+
+Do you want to play a new game? (Y/N):

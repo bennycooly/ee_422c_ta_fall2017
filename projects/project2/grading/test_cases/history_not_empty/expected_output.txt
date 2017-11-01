@@ -1,0 +1,32 @@
+Welcome to Mastermind.
+Do you want to play a new game? (Y/N):
+
+You have 5 guess(es) left.
+Enter guess:
+BBBB -> 1b_0w
+
+You have 4 guess(es) left.
+Enter guess:
+BBBG -> 1b_1w
+
+You have 3 guess(es) left.
+Enter guess:
+YOGB -> 0b_3w
+
+You have 2 guess(es) left.
+Enter guess:
+ROGB -> 0b_3w
+
+You have 1 guess(es) left.
+Enter guess:
+BBBB -> 1b_0w
+BBBG -> 1b_1w
+YOGB -> 0b_3w
+ROGB -> 0b_3w
+
+You have 1 guess(es) left.
+Enter guess:
+BGOP -> 4b_0w
+You win!
+
+Do you want to play a new game? (Y/N):

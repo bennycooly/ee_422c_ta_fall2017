@@ -1,0 +1,9 @@
+Welcome to Mastermind.
+Do you want to play a new game? (Y/N):
+
+You have 1 guess(es) left.
+Enter guess:
+GBRY -> 0b_0w
+You lose! The pattern was OPPO
+
+Do you want to play a new game? (Y/N):

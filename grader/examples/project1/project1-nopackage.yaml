@@ -1,0 +1,102 @@
+# Project 1 Problem 1 Grader Configuration
+---
+canvas:
+  base-url: https://utexas.instructure.com/api/v1
+  auth-token: 1017~ikWT6ROvirIY7Etul7IYBKv2YyrzTrajsz9bWtRrbzeCwU6GF2C7o16C1YXneCtn
+  course: 1203060
+  assignment: "Assignment #1"
+
+# submissions and results will go to the students directory
+students-dir: students
+
+# the grader by default grades all students in a course
+# uncomment below if you want to grade a subset of students and/or specific sections
+students-subset:
+  # list of student eid's
+  students:
+    - nas2754
+    - sg38368
+    - kml2959
+    - kyc375
+    - adb2969
+
+
+
+  # sections:
+  #   - 16265
+  #   - 16270
+
+# package layout of source files
+source:
+  # fully qualified name to the main class
+  - main: Problem1
+    files:
+      - Problem1.java
+
+  - main: Problem2
+    files:
+      - Problem2.java
+
+solution:
+  dir: solution-nopackage
+  files:
+    - Problem1.java
+
+tests:
+  dir: tests
+  tests:
+    - name: Problem 1 - Provided Test
+      main: Problem1
+      dir: p1-provided
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+
+    - name: Problem 1 - Random Digits
+      main: Problem1
+      dir: p1-random-1
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+
+    - name: Problem 1 - Random Digits (2)
+      main: Problem1
+      dir: p1-random-2
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+    
+    - name: Problem 2 - Provided Test
+      main: Problem2
+      dir: p2-provided
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+    
+    - name: Problem 2 - All Dollar Words
+      main: Problem2
+      dir: p2-all-dollar-words
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+
+    - name: Problem 2 - Random Paragraph
+      main: Problem2
+      dir: p2-random-1
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10
+
+    - name: Problem 2 - Random Paragraph (2)
+      main: Problem2
+      dir: p2-random-2
+      input: in.txt
+      output: out.txt
+      solution: expected.txt
+      points: 10

@@ -16,6 +16,9 @@ public class Problem2 {
             // this makes it easy to check the word value
             int value = 0;
             for (int i = 0; i < word.length(); ++i) {
+                if (!Character.isAlphabetic(word.charAt(i))) {
+                    continue;
+                }
                 value += Character.toLowerCase(word.charAt(i)) - 'a' + 1;
             }
 

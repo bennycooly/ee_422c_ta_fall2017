@@ -1,0 +1,76 @@
+Welcome to Mastermind.
+Do you want to play a new game? (Y/N):
+
+You have 12 guess(es) left.
+Enter guess:
+YGPO -> 0b_3w
+
+You have 11 guess(es) left.
+Enter guess:
+YGPB -> 0b_2w
+
+You have 10 guess(es) left.
+Enter guess:
+GPYO -> 0b_3w
+
+You have 9 guess(es) left.
+Enter guess:
+GRYO -> 0b_3w
+
+You have 8 guess(es) left.
+Enter guess:
+GBYO -> 0b_2w
+
+You have 7 guess(es) left.
+Enter guess:
+YGOR -> 0b_3w
+
+You have 6 guess(es) left.
+Enter guess:
+OGYR -> 0b_3w
+
+You have 5 guess(es) left.
+Enter guess:
+YGPO -> 0b_3w
+YGPB -> 0b_2w
+GPYO -> 0b_3w
+GRYO -> 0b_3w
+GBYO -> 0b_2w
+YGOR -> 0b_3w
+OGYR -> 0b_3w
+
+You have 5 guess(es) left.
+Enter guess:
+PYGO -> 1b_2w
+
+You have 4 guess(es) left.
+Enter guess:
+PGYO -> 1b_2w
+
+You have 3 guess(es) left.
+Enter guess:
+POGY -> 3b_0w
+
+You have 2 guess(es) left.
+Enter guess:
+YGPO -> 0b_3w
+YGPB -> 0b_2w
+GPYO -> 0b_3w
+GRYO -> 0b_3w
+GBYO -> 0b_2w
+YGOR -> 0b_3w
+OGYR -> 0b_3w
+PYGO -> 1b_2w
+PGYO -> 1b_2w
+POGY -> 3b_0w
+
+You have 2 guess(es) left.
+Enter guess:
+ROGY -> 2b_1w
+
+You have 1 guess(es) left.
+Enter guess:
+POGP -> 2b_0w
+You lose! The pattern was PORY
+
+Do you want to play a new game? (Y/N):
