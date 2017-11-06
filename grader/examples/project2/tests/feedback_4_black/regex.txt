@@ -1,0 +1,2 @@
+(?ixs)
+.*?12.*?(4\sblack(.*?(0\swhite))?|0\swhite(.*?(4\sblack))?|4b_0w|0w_4b)

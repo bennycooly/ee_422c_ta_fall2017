@@ -1,0 +1,2 @@
+(?ixs)
+.*?12.*?(No|0\speg|0\sblack(.*?(0\swhite))?|0\swhite(.*?(0\sblack))?|0b_0w|0w_0b)

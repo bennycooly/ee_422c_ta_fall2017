@@ -12,9 +12,9 @@ students-dir: students
 # the grader by default grades all students in a course
 # uncomment below if you want to grade a subset of students and/or specific sections
 # students-subset:
-#   list of student eid's
+# # list of student eid's
 #   students:
-#     - sr42946
+#     - sp39447
 
 #   sections:
 #     - 16265
@@ -23,7 +23,8 @@ students-dir: students
 # package layout of source files
 source:
   # fully qualified name to the main class
-  main: assignment2.Driver
+  # "find" means to find the main class
+  main: find
   files: "*"
 
 solution:
@@ -33,3 +34,6 @@ solution:
 
 tests:
   dir: tests
+
+grade:
+  points-per-missed: 2

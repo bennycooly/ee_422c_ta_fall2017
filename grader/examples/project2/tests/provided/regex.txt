@@ -1,0 +1,9 @@
+(?ixs)
+.*?Welcome\sto\sMastermind
+.*?Y\/N
+.*?12.*?(no\spegs|0\sblack(.*?(0\swhite))?|0\swhite(.*?(1\sblack))?|0b_0w|0w_0b)
+.*?11.*?INVALID\sGUESS
+.*?INVALID\sGUESS
+.*?(11)?.*?(1\sblack(.*?(0\swhite))?|0\swhite(.*?(1\sblack))?|1b_0w|0w_1b)
+.*?10.*?(4\sblack(.*?(0\swhite))?|0\swhite(.*?(4\sblack))?|4b_0w|0w_4b)
+.*?Y\/N

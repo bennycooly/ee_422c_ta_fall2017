@@ -1,0 +1,5 @@
+(?ixs)
+.*?12.*?INVALID\sGUESS
+.*?INVALID\sGUESS
+.*?INVALID\sGUESS
+.*?Y\/N

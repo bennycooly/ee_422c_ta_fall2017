@@ -1,0 +1,17 @@
+# Configuration common to all tests
+---
+main: assignment2.Driver
+args:
+  - "0"
+copy:
+  - src: SecretCodeGenerator.java
+    dst: assignment2
+    replace: true
+  - src: GameConfiguration.java
+    dst: assignment2
+    replace: false
+    
+input: in.txt
+output: out.txt
+solution: expected.txt
+regex: regex.txt

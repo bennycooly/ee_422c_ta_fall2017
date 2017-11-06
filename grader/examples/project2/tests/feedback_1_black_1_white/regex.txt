@@ -1,0 +1,2 @@
+(?ixs)
+.*?12.*?(1\sblack(.*?(1\swhite))?|1\swhite(.*?(1\sblack))?|1b_1w|1w_1b)
