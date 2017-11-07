@@ -13,7 +13,9 @@ import argparse
 import yaml
 import requests
 import json
+import multiprocessing as mp
 
+from java import JavaUtils
 from test import Test
 
 class Grader:
@@ -45,8 +47,11 @@ class Grader:
         # map of student id's (canvas id) to their student objects
         self.student_map = {}
 
-        # map of student id;s (canvas id) to their submission objects
+        # map of student id's (canvas id) to their submission objects
         self.submission_map = {}
+
+        # map of student id's (canvas id) to their test results
+        self.results_map = {}
 
         # dictionary of all directory names
         # only the dirs["grader"] directory should be absolute;
@@ -81,6 +86,17 @@ class Grader:
             metavar="CONFIG_FILE.yaml",
             help = "YAML configuration file",
             required = True
+        )
+        self.parser.add_argument(
+            "-s", "--single-student",
+            nargs=1,
+            metavar="STUDENT_EID",
+            help = "Student EID"
+        )
+        self.parser.add_argument(
+            "-u", "--update",
+            action="store_true",
+            help = "Regrade and update grades"
         )
 
         self.args = self.parser.parse_args(self.argv[1:])
@@ -140,85 +156,27 @@ class Grader:
         students = []
 
         # check for existing .grader/student.json file
-        if (not os.path.exists(students_json_file)) or \
-            (not self.is_valid_json_file(students_json_file)):
-
-            print("Retrieving students from LMS.")
-
-            # check if we are grading all students or just a subset
-            if "students-subset" not in self.config:
-                print("No subset of students specified; retrieving all students.")
-                # get all students
-                url = self.lms["course-url"] + "/users"
-                params = {
-                    "enrollment_type": ["student"]
-                }
-                students = self.get_paginated_result(
-                    url = url, params=params, headers=self.lms["headers"])
-            
-            else:
-                # add specified students
-                if "students" in self.config["students-subset"]:
-                    print("Getting specified students...")
-                    custom_student_eids = self.config["students-subset"]["students"]
-                    for eid in custom_student_eids:
-                        url = self.lms["course-url"] + "/users"
-                        params = {
-                            "enrollment_type": ["student"],
-                            "search_term": eid
-                        }
-                        r = requests.get(
-                            url = url,
-                            params = params,
-                            headers = self.lms["headers"]
-                        )
-
-                        if r is None:
-                            print("Warning: could not find student " + eid)
-                            continue
-
-                        student = r.json()[0]
-                        students.append(student)
-
-                # add students for specified sections
-                if "sections" in self.config["students-subset"]:
-                    print("Getting students in specified sections...")
-                    section_utids = self.config["students-subset"]["sections"]
-                    url = self.lms["course-url"] + "/sections"
-                    params = {
-                        "include": "students"
-                    }
-                    r = requests.get(
-                        url = url,
-                        headers = self.lms["headers"],
-                        params = params
-                    )
-                    sections = r.json()
-                    # find the sections based on their given section ut id's
-                    for section in sections:
-                        for section_utid in section_utids:
-                            # append all students
-                            if str(section_utid) in section["sis_section_id"]:
-                                students.extend(section["students"])
-                    
-
-
-            # write to .grader/students.json file
-            with open(students_json_file, "w") as f:
-                f.write(json.dumps(students, indent=4))
-        
-        else:
+        if os.path.exists(students_json_file) and self.is_valid_json_file(students_json_file):
             print("Using existing students.json file.")
             with open(students_json_file, "r") as f:
                 students = json.loads(f.read())
-
-        # create student map
-        for student in students:
-            self.student_map[student["id"]] = student
-            # print(student["sis_user_id"])
-
-        print("Found " + str(len(self.student_map.values())) + " students.")
-
+        
+        else:
+            print("Retrieving students from LMS.")
+            # get all students
+            url = self.lms["course-url"] + "/users"
+            params = {
+                "enrollment_type": ["student"]
+            }
+            students = self.get_paginated_result(
+                url = url, params=params, headers=self.lms["headers"]
+            )
+            # write to .grader/students.json file
+            with open(students_json_file, "w") as f:
+                f.write(json.dumps(students, indent=4))
+            
+            print("Saved students to " + students_json_file)
+        
         # make directories for all the students
         print("Making highest level student directory...")
         if not os.path.exists(self.dirs["students"]):
@@ -240,34 +198,85 @@ class Grader:
 
             # students/:eid/results
             os.makedirs(os.path.join(student_dir, "results"))
+        
+        ## Filter students if requested
+        # check if we are grading all students or just a subset
+        if "students-subset" in self.config:
+            students_subset = []
+            # add specified students
+            if "students" in self.config["students-subset"]:
+                print("Getting specified students...")
+                custom_student_eids = self.config["students-subset"]["students"]
+                # for eid in custom_student_eids:
+                    
+                #     students.append(student)
+                filtered_students = list(filter(lambda s: s.get("sis_user_id") in custom_student_eids, students))
+                students_subset.extend(filtered_students)
+                # print(students_subset)
+
+            # add students for specified sections
+            if "sections" in self.config["students-subset"]:
+                print("Getting students in specified sections...")
+                section_utids = self.config["students-subset"]["sections"]
+                url = self.lms["course-url"] + "/sections"
+                params = {
+                    "include": "students"
+                }
+                r = requests.get(
+                    url = url,
+                    headers = self.lms["headers"],
+                    params = params
+                )
+                sections = r.json()
+                # find the sections based on their given section ut id's
+                for section in sections:
+                    for section_utid in section_utids:
+                        # append all students
+                        if str(section_utid) in section["sis_section_id"]:
+                            students_subset.extend(section["students"])
+            
+            students = students_subset
+
+        # create student map
+        for student in students:
+            self.student_map[student["id"]] = student
+            # print(student["sis_user_id"])
+
+        print("Grading " + str(len(self.student_map.values())) + " students.")
     
     def init_submissions(self):
         submissions_json_file = os.path.join(".grader", "submissions.json")
         submissions = []
 
         # check for existing .grader/submissions.json file
-        if (not os.path.exists(submissions_json_file)) or \
-            (not self.is_valid_json_file(submissions_json_file)):
+        if os.path.exists(submissions_json_file) and self.is_valid_json_file(submissions_json_file):
+            print("Using existing submissions.json file.")
+            with open(submissions_json_file, "r") as f:
+                submissions = json.loads(f.read())
 
+        else:
             print("Retrieving submissions from LMS.")
             url = self.lms["assignment-url"] + "/submissions"
             all_submissions = self.get_paginated_result(
                 url=url,
                 headers=self.lms["headers"]
             )
-            submissions = list(filter(lambda s: s["user_id"] in self.student_map, all_submissions))
+            submissions.extend(all_submissions)
 
             # write to json file
             with open(submissions_json_file, "w") as f:
                 f.write(json.dumps(submissions, indent=4))
         
-        else:
-            print("Using existing submissions.json file.")
-            with open(submissions_json_file, "r") as f:
-                submissions = json.loads(f.read())
+        # we only look at the submissions of the students we need to grade
+        submissions_subset = list(filter(lambda sub: sub.get("user_id") in self.student_map, submissions))
+
+        submissions = submissions_subset
         
         # map each user's eid to the user's submission
         for submission in submissions:
+            if submission.get("workflow_state") == "unsubmitted":
+                self.student_map.pop(submission.get("user_id"))
+                continue
             self.submission_map[submission["user_id"]] = submission
         
         print("Found " + str(len(submissions)) + " submissions.")
@@ -305,7 +314,6 @@ class Grader:
     def unzip_submissions(self):
         for student in self.student_map.values():
             zip_filename = os.path.join(self.dirs["students"], student["sis_user_id"], "submission.zip")
-
         
             print("Zip file is " + zip_filename)
             if not zipfile.is_zipfile(zip_filename):
@@ -322,140 +330,110 @@ class Grader:
                 
             zip_file.close()
 
-    """
-    Compile the source files for every student as well as the solution.
-    """
-    def compile_sources(self):
-        source = self.config["source"]
-        # for source in sources:
-        source_files = source["files"]
-        for student in self.student_map.values():
-            print("Looking at student " + student["sis_user_id"])
-            compile_result_file = os.path.join(self.dirs["students"], student["sis_user_id"], "results", "compile.txt")
-            student_files = []
-            source_path = os.path.join(self.dirs["students"], student["sis_user_id"], "submission")
-
-            if type(source_files) is str and source_files == "*":
-                matched_files = glob.glob(os.path.join(source_path, "**", "*.java"), recursive=True)
-                student_files.extend(matched_files)
-
-            if type(source_files) is list:
-                for file in source_files:
-                    matched_files = glob.glob(os.path.join(source_path, "**", file), recursive=True)
-                    student_files.extend(matched_files)
-
-            # compile student files
-            # for file in student_files:
-            print("Found files: " + str(["javac"] + student_files))
-            completed = subprocess.run(["javac"] + student_files)
-            if completed.returncode == 0:
-                print("Compiled successfully.")
-            else:
-                print("Failed to compile.")
-        
-        print("Compiling solution files...")
-        solution_files = []
-        for file in source_files:
-            matched_files = glob.glob(os.path.join(self.dirs["solution"], "**", file))
-            solution_files.extend(matched_files)
-        
-
-        for file in solution_files:
-            completed = subprocess.run(["javac", file])
-            if completed.returncode == 0:
-                print("Compiled successfully.: " + file)
-            else:
-                print("Failed to compile: " + file)
-
+    # try to fix package related directory structures
     
     def run_tests(self):
-        tests_dir = self.config["tests"]["dir"]            
-        # test_configs = self.config["tests"]["tests"]
+        tests_dir = self.config["tests"]["dir"]
 
-        for student in self.student_map.values():
-            print("Running tests for student: " + student["sis_user_id"])
+        results_json = os.path.join(".grader", "results.json")
 
-            student_dir = os.path.join(self.dirs["students"], student["sis_user_id"])
-            source_dir = os.path.join(student_dir, "submission")
-            results_dir = os.path.join(student_dir, "results")
+        if os.path.exists(results_json) and self.is_valid_json_file(results_json) and not self.args.update:
+            print("Using existing results.json file.")
+            with open(results_json, "r") as f:
+                results = json.load(f)
+                for result in results:
+                    self.results_map[result.get("student-id")] = result
+            
+        else:
+            processes = []
+            q = mp.Queue()
 
-            # first clean the student directory
-            if os.path.exists(results_dir):
-                shutil.rmtree(results_dir)
-            os.makedirs(results_dir)
-            # create summary file
-            open(os.path.join(student_dir, "results", "summary.txt"), "w+")
+            for i, student in enumerate(self.student_map.values()):
+                self.results_map[student.get("id")] = {}
+                process = mp.Process(target=self.run_tests_for_student, args=(q, student,))
+                processes.append(process)
+                process.start()
+
+            for process in processes:
+                process.join()
+            
+            results_list = []
+            while not q.empty():
+                result = q.get()
+                self.results_map[result.get("student-id")] = result
+                results_list.append(result)
+            q.close()
+            
+            print(results_list)
+
+            # write to the json file
+            with open(results_json, "w") as f:
+                json.dump(results_list, f, indent=4)
         
-            for test_dirname in os.listdir(self.dirs["tests"]):
-                test_dir = os.path.join(self.dirs["tests"], test_dirname)
-                print(test_dir)
-                main_class = self.config["source"]["main"]
-                classpath = self.get_classpath(student_dir, main_class)
-                test = Test(
-                    test_config = "",
-                    source_config = {
-                        "student-dir": student_dir,
-                        "main": main_class,
-                        "classpath": classpath
-                    },
-                    tests_dir = self.dirs["tests"]
-                )
 
-        return
+    def run_tests_for_student(self, q, student,):
+        print("Running tests for student: " + student["sis_user_id"])
 
-        # first run the solution
-        solution_dir = self.dirs["solution"]
+        student_dir = os.path.join(self.dirs["students"], student["sis_user_id"])
+        tests_dir = self.dirs["tests"]
+        source_dir = os.path.join(student_dir, "submission")
+        results_dir = os.path.join(student_dir, "results")
 
-        for test_config in test_configs:
-            main_class = test_config["main"]
-            classpath = self.get_classpath(self.dirs["solution"], main_class)
-            test = Test(
-                test_config = test_config,
-                source_config = {
-                    "student-dir": self.dirs["solution"],
-                    "main": main_class,
-                    "classpath": classpath
-                },
-                tests_dir = self.dirs["tests"],
-                solution_dir = self.dirs["solution"]
-            )
+        # first clean the student directory
+        if os.path.exists(results_dir):
+            shutil.rmtree(results_dir)
+        os.makedirs(results_dir)
+        # create summary file
+        open(os.path.join(student_dir, "results", "summary.txt"), "w+")
 
-            test.run()
+        num_passed = 0
+    
+        for test_dirname in os.listdir(tests_dir):
+            test_dir = os.path.join(self.dirs["tests"], test_dirname)
+            if not os.path.isdir(test_dir):
+                continue
 
-        for student in self.student_map.values():
-            print("Running tests for student: " + student["sis_user_id"])
+            main_class = self.config["source"]["main"]
+            test = Test(tests_dir, test_dirname, student_dir, main_class)
 
-            student_dir = os.path.join(self.dirs["students"], student["sis_user_id"])
-            source_dir = os.path.join(student_dir, "submission")
+            result = test.run()
 
-            # first clean the student directory
-            results_dir = os.path.join(student_dir, "results")
-            if os.path.exists(results_dir):
-                shutil.rmtree(results_dir)
-            os.makedirs(results_dir)
-            # create summary file
-            open(os.path.join(student_dir, "results", "summary.txt"), "w+")
+            if result == "pass":
+                num_passed += 1
+        
+        q.put({
+            "student-id": student.get("id"),
+            "tests-passed": num_passed
+        })
 
-            # run all tests
-            for test_config in test_configs:
-                main_class = test_config["main"]
-                classpath = self.get_classpath(source_dir, main_class)
-                # change the path to the test to be relative to the cwd
-                # test_config["dir"] = os.path.join(self.dirs["tests"], test_config["dir"])
-                test = Test(
-                    test_config = test_config,
-                    source_config = {
-                        "student-dir": student_dir,
-                        "main": main_class,
-                        "classpath": classpath
-                    },
-                    tests_dir = self.dirs["tests"],
-                    solution_dir = self.dirs["solution"]
-                )
+    
+    def post_grades(self):
+        grade_data = {
+            "grade_data": {}
+        }
+        for result in self.results_map.values():
+            num_tests = 25
+            points_per_missed = self.config.get("grade").get("points-per-missed")
+            grade = 100 - (points_per_missed * (num_tests - result.get("tests-passed")))
+            grade_data["grade_data"][str(result.get("student-id"))] = {
+                "posted_grade": str(grade)
+            }
 
-                test.run()
-                test.compare()
-                test.grade()
+        print(json.dumps(grade_data))
+
+        grade_url = self.lms.get("assignment-url") + "/submissions/update_grades"
+        headers = self.lms.get("headers")
+        headers["Content-Type"] = "application/json"
+        r = requests.post(
+            url = grade_url,
+            headers = headers,
+            data = json.dumps(grade_data)
+        )
+        response = r.json()
+        print(grade_url)
+        print(response)
+
+        
     
     def zip_results(self):
         for student in self.student_map.values():
@@ -468,19 +446,72 @@ class Grader:
             print("Zip file is " + zip_filename)
 
             with zipfile.ZipFile(zip_filename, "w") as z:
-                for file in glob.glob(os.path.join(results_dir, "**\*"), recursive=True):
+                for file in glob.glob(os.path.join(results_dir, "**/*"), recursive=True):
                     # don't write ourselves
                     if str(file) == zip_filename:
                         continue
-
+                    # print(file)
                     # write files relative to the results directory path
                     z.write(file, arcname=os.path.relpath(file, results_dir))
                 
 
     def attach_results(self):
+        upload_data = {
+            "grade_data": {}
+        }
         for student in self.student_map.values():
-            student["id"]
+            url = self.lms.get("assignment-url") + "/submissions/" + str(student.get("id")) + "/comments/files"
+            print(url)
+            results_dir = os.path.join(self.dirs.get("students"), student.get("sis_user_id"), "results")
+            zip_filename = os.path.join(results_dir, "results.zip")
+            print(zip_filename)
 
+            # first issue a POST to Canvas to retrieve the upload token
+            data = {
+                "name": "results.zip",
+                "content_type": "application/zip",
+                "on_duplicate": "overwrite"
+            }
+            r = requests.post(
+                url = url,
+                headers = self.lms.get("headers"),
+                data = data
+            )
+            token_response = r.json()
+            print(token_response)
+
+            # now upload the file
+            upload_url = token_response.get("upload_url")
+            files = {
+                "file": open(zip_filename, "rb")
+            }
+            data = token_response.get("upload_params")
+            r = requests.post(
+                url = upload_url,
+                files = files,
+                data = data
+            )
+            upload_response = r.json()
+            print(upload_response)
+
+            upload_data["grade_data"][str(student.get("id"))] = {
+                "file_ids": [
+                    upload_response.get("id")
+                ]
+            }
+
+        print(upload_data)
+        # now issue a PUT to comment on the submission
+        submissions_url = self.lms.get("assignment-url") + "/submissions/update_grades"
+        headers = self.lms.get("headers")
+        headers["Content-Type"] = "application/json"
+        r = requests.post(
+            url = submissions_url,
+            headers = headers,
+            data = json.dumps(upload_data)
+        )
+
+        print(r.json())
 
     """
     Perform multiple paginated GET requests and return the combined result.
@@ -530,7 +561,10 @@ class Grader:
         if '.' in main_class:
             # search for the highest-level package directory
             classpath_matches = glob.glob(os.path.join(dir, "**", main_class.split('.')[0]), recursive=True)
-            classpath = os.path.join(classpath_matches[0], "..")
+            if len(classpath_matches) > 0:
+                classpath = os.path.join(classpath_matches[0], "..")
+            else:
+                classpath = dir
         else:
             # search for the main java file
             # print(os.path.join(dir, "**", main_class))
@@ -550,8 +584,11 @@ class Grader:
         # self.download_submissions()
         # self.unzip_submissions()
         # self.compile_sources()
-        self.run_tests()
+        # self.run_tests()
+        
         # self.zip_results()
+        # self.post_grades()
+        # self.attach_results()
 
     
     def clean(self):

@@ -11,10 +11,10 @@ students-dir: students
 
 # the grader by default grades all students in a course
 # uncomment below if you want to grade a subset of students and/or specific sections
-# students-subset:
-# # list of student eid's
-#   students:
-#     - sp39447
+students-subset:
+# list of student eid's
+  students:
+    - zt2327
 
 #   sections:
 #     - 16265
